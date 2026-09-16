@@ -93,6 +93,7 @@ body{
 .app .lang-opt[data-lang="fr"]{background-image:linear-gradient(158deg, rgba(255,112,186,.24) 0%, rgba(190,80,220,.10) 46%, rgba(8,12,30,0) 78%) !important;}
 .app .lang-opt[data-lang="es"]{background-image:linear-gradient(158deg, rgba(255,116,104,.24) 0%, rgba(230,120,50,.10) 46%, rgba(8,12,30,0) 78%) !important;}
 .app .lang-opt[data-lang="ru"]{background-image:linear-gradient(158deg, rgba(158,128,255,.26) 0%, rgba(110,90,230,.10) 46%, rgba(8,12,30,0) 78%) !important;}
+.app .lang-opt[data-lang="tr"]{background-image:linear-gradient(158deg, rgba(255,90,90,.26) 0%, rgba(220,40,40,.10) 46%, rgba(8,12,30,0) 78%) !important;}
 
 /* dilin arkasındaki soluk yapı silueti — orijinal boyut, köşelerden kırpılır */
 .app .lang-opt .landmark{
@@ -132,6 +133,7 @@ body{
 .app .lang-opt[data-lang="fr"]{--lg:255,112,186;}
 .app .lang-opt[data-lang="es"]{--lg:255,116,104;}
 .app .lang-opt[data-lang="ru"]{--lg:158,128,255;}
+.app .lang-opt[data-lang="tr"]{--lg:255,90,90;}
 .app .lang-opt{--lg:150,190,255;}   /* yedek ton */
 
 .app .lang-opt.active{
@@ -319,6 +321,23 @@ body{
     radial-gradient(56% 100% at 14% 100%, rgba(255,170,80,.18), transparent 72%),
     radial-gradient(50% 100% at 88% 96%,  rgba(255,158,66,.22), transparent 72%),
     linear-gradient(180deg, rgba(6,10,28,0), rgba(6,10,28,.5));
+}
+
+/* ------------------------------------------------- modal / masa çakışması
+   BUG: .app position:relative + z-index:1, kendi stacking context'ini
+   oluşturuyor (transform da eklendiği için). Bu yüzden .app'in İÇİNDEKİ
+   .cat-overlay / .info-overlay gibi katmanların z-index:500/1000 değerleri
+   yalnızca .app'in kendi iç sıralamasında geçerli — dışarıdaki #fg-desk
+   (z-index:2) ve #grain (z-index:2) katmanlarının ÜSTÜNE asla çıkamıyor.
+   Sonuç: geniş ekranlarda (masaüstü) #fg-desk (kahve/kitap grafiği) daha
+   uzun olduğundan, "Kategori Seç" ve bilgi panellerinin alt kısmını
+   kaplayıp önüne geçiyordu. Çözüm: bu panellerden biri açıkken .app'i
+   #fg-desk/#grain'in üstüne çıkar; kapalıyken orijinal katman sırası
+   (dekor öğeleri camsı panellerin önünde) korunur. */
+.app:has(#catOverlay.open),
+.app:has(#infoPanel.open),
+.app:has(#howToPanel.open){
+  z-index:5;
 }
 
 .steam path{animation:steamRise 4.2s ease-in-out infinite; transform-origin:center bottom;}
